@@ -55,7 +55,20 @@ export default async function ProductsPage({ searchParams }: Props) {
   }
 
   if (params.q) {
-    query = query.textSearch("name", params.q, { type: "websearch" });
+    // ブランド名でも検索
+    const { data: matchedBrands } = await supabase
+      .from("brands")
+      .select("id")
+      .ilike("name", `%${params.q}%`);
+    const brandIds = (matchedBrands ?? []).map((b: { id: string }) => b.id);
+
+    if (brandIds.length > 0) {
+      query = query.or(
+        `name.ilike.%${params.q}%,brand_id.in.(${brandIds.join(",")})`
+      );
+    } else {
+      query = query.ilike("name", `%${params.q}%`);
+    }
   }
 
   const { data: products } = await query.limit(60);
@@ -70,6 +83,33 @@ export default async function ProductsPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">商品一覧</h1>
+
+      {/* 検索ボックス */}
+      <form method="get" className="mb-6">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            name="q"
+            defaultValue={params.q ?? ""}
+            placeholder="商品名・ブランド名で検索"
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-brand focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-600 transition-colors"
+          >
+            検索
+          </button>
+          {params.q && (
+            <a
+              href="/products"
+              className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              クリア
+            </a>
+          )}
+        </div>
+      </form>
 
       <div className="flex gap-8">
         {/* サイドバー：フィルタ */}
