@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, Building2, Tag, BarChart2 } from "lucide-react";
+import { LayoutDashboard, Package, Building2, Tag, BarChart2, Image } from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const NAV = [
   { href: "/admin/brands", label: "ブランド管理", icon: Building2 },
   { href: "/admin/listings", label: "掲載料管理", icon: BarChart2 },
   { href: "/admin/categories", label: "カテゴリ管理", icon: Tag },
+  { href: "/admin/banners", label: "バナー管理", icon: Image },
 ];
 
 export default function AdminLayout({

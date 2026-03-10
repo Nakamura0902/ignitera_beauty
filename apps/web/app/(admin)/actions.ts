@@ -143,6 +143,48 @@ export async function updateProduct(formData: FormData) {
 }
 
 // =============================================
+// Banner actions
+// =============================================
+export async function createBanner(formData: FormData) {
+  const supabase = await createAdminClient();
+
+  const imageFile = formData.get("banner_image") as File | null;
+  if (!imageFile || imageFile.size === 0) redirect("/admin/banners");
+
+  const ext = imageFile.name.split(".").pop() ?? "jpg";
+  const fileName = `banner-${Date.now()}.${ext}`;
+
+  const { data: uploadData } = await supabase.storage
+    .from("banner-images")
+    .upload(fileName, imageFile, { upsert: true });
+
+  if (!uploadData) redirect("/admin/banners");
+
+  const { data: urlData } = supabase.storage
+    .from("banner-images")
+    .getPublicUrl(uploadData.path);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("banners").insert({
+    title: (formData.get("title") as string) || null,
+    image_url: urlData.publicUrl,
+    link_url: (formData.get("link_url") as string) || null,
+    display_order: parseInt(formData.get("display_order") as string) || 0,
+    is_active: true,
+  });
+
+  redirect("/admin/banners");
+}
+
+export async function deleteBanner(formData: FormData) {
+  const supabase = await createAdminClient();
+  const id = formData.get("id") as string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("banners").delete().eq("id", id);
+  redirect("/admin/banners");
+}
+
+// =============================================
 // Listing actions
 // =============================================
 export async function addListing(formData: FormData) {

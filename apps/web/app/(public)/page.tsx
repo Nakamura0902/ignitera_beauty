@@ -1,39 +1,40 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product/ProductCard";
 import type { ProductWithBrand } from "@/types/database";
 
-const CATEGORIES = [
-  { label: "洗顔料", slug: "face-wash", emoji: "🧼" },
-  { label: "化粧水", slug: "lotion", emoji: "💧" },
-  { label: "乳液", slug: "emulsion", emoji: "🥛" },
-  { label: "美容液", slug: "serum", emoji: "✨" },
-  { label: "保湿クリーム", slug: "moisturizer", emoji: "🫙" },
-  { label: "日焼け止め", slug: "sunscreen", emoji: "☀️" },
-  { label: "シャンプー", slug: "shampoo", emoji: "💆" },
-  { label: "ボディウォッシュ", slug: "body-wash", emoji: "🚿" },
-];
+type Banner = { id: string; title: string | null; image_url: string; link_url: string | null };
 
 export default async function TopPage() {
   const supabase = await createClient();
 
-  // 注目商品
-  const { data: featured } = await supabase
-    .from("products")
-    .select("*, brands(id, name, slug, logo_url)")
-    .eq("is_published", true)
-    .eq("is_featured", true)
-    .order("display_order")
-    .limit(8);
-
-  // 新着商品
-  const { data: latest } = await supabase
-    .from("products")
-    .select("*, brands(id, name, slug, logo_url)")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false })
-    .limit(8);
+  const [
+    { data: banners },
+    { data: featured },
+    { data: latest },
+  ] = await Promise.all([
+    supabase
+      .from("banners")
+      .select("id, title, image_url, link_url")
+      .eq("is_active", true)
+      .order("display_order")
+      .limit(6),
+    supabase
+      .from("products")
+      .select("*, brands(id, name, slug, logo_url)")
+      .eq("is_published", true)
+      .eq("is_featured", true)
+      .order("display_order")
+      .limit(8),
+    supabase
+      .from("products")
+      .select("*, brands(id, name, slug, logo_url)")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(8),
+  ]);
 
   return (
     <div>
@@ -67,22 +68,38 @@ export default async function TopPage() {
         </div>
       </section>
 
-      {/* カテゴリグリッド */}
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <h2 className="mb-6 text-lg font-bold text-gray-900">カテゴリから探す</h2>
-        <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/categories/${cat.slug}`}
-              className="flex flex-col items-center gap-2 rounded-xl border border-gray-200 p-3 hover:border-brand hover:shadow-sm transition-all"
-            >
-              <span className="text-2xl">{cat.emoji}</span>
-              <span className="text-xs text-gray-700 text-center">{cat.label}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* バナーエリア */}
+      {banners && banners.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-10">
+          <div className={`grid gap-4 ${(banners as Banner[]).length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
+            {(banners as Banner[]).map((banner) => {
+              const inner = (
+                <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-[3/1] sm:aspect-[2/1]">
+                  <Image
+                    src={banner.image_url}
+                    alt={banner.title ?? "バナー"}
+                    fill
+                    className="object-cover transition-transform hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                  />
+                  {banner.title && (
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 to-transparent p-4">
+                      <span className="text-sm font-semibold text-white">{banner.title}</span>
+                    </div>
+                  )}
+                </div>
+              );
+              return banner.link_url ? (
+                <a key={banner.id} href={banner.link_url} target="_blank" rel="noopener noreferrer">
+                  {inner}
+                </a>
+              ) : (
+                <div key={banner.id}>{inner}</div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* 注目商品 */}
       {featured && featured.length > 0 && (
