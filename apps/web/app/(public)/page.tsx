@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product/ProductCard";
+import { BannerCarousel } from "@/components/BannerCarousel";
 import type { ProductWithBrand } from "@/types/database";
 
 type Banner = { id: string; title: string | null; image_url: string; link_url: string | null };
@@ -70,35 +70,7 @@ export default async function TopPage() {
 
       {/* バナーエリア */}
       {banners && banners.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-10">
-          <div className={`grid gap-4 ${(banners as Banner[]).length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
-            {(banners as Banner[]).map((banner) => {
-              const inner = (
-                <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-[3/1] sm:aspect-[2/1]">
-                  <Image
-                    src={banner.image_url}
-                    alt={banner.title ?? "バナー"}
-                    fill
-                    className="object-cover transition-transform hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                  />
-                  {banner.title && (
-                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 to-transparent p-4">
-                      <span className="text-sm font-semibold text-white">{banner.title}</span>
-                    </div>
-                  )}
-                </div>
-              );
-              return banner.link_url ? (
-                <a key={banner.id} href={banner.link_url} target="_blank" rel="noopener noreferrer">
-                  {inner}
-                </a>
-              ) : (
-                <div key={banner.id}>{inner}</div>
-              );
-            })}
-          </div>
-        </section>
+        <BannerCarousel banners={banners as Banner[]} />
       )}
 
       {/* 注目商品 */}
