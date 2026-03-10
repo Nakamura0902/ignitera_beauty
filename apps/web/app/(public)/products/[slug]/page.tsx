@@ -16,6 +16,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import type { ProductWithBrand } from "@/types/database";
 
 export const revalidate = 3600; // ISR: 1時間
+export const dynamicParams = true; // generateStaticParams外のスラッグも動的レンダリング
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -48,8 +49,7 @@ export async function generateStaticParams() {
   if (!supabase) return [];
   const { data } = await supabase
     .from("products")
-    .select("slug")
-    .eq("is_published", true);
+    .select("slug");
   return (data ?? []).map((p: { slug: string }) => ({ slug: p.slug }));
 }
 
