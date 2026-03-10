@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const supabase = createStaticClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("products")
     .select("slug")

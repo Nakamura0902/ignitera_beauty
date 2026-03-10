@@ -16,6 +16,7 @@ interface Props {
 
 export async function generateStaticParams() {
   const supabase = createStaticClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("brands")
     .select("slug")

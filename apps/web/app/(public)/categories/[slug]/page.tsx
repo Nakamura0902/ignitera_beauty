@@ -13,6 +13,7 @@ interface Props {
 
 export async function generateStaticParams() {
   const supabase = createStaticClient();
+  if (!supabase) return [];
   const { data } = await supabase.from("categories").select("slug");
   return (data ?? []).map((c: { slug: string }) => ({ slug: c.slug }));
 }
