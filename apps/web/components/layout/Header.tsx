@@ -7,14 +7,14 @@ import { useCompareStore } from "@/store/compareStore";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
-  { label: "洗顔料", slug: "face-wash", emoji: "🧼" },
-  { label: "化粧水", slug: "lotion", emoji: "💧" },
-  { label: "乳液", slug: "emulsion", emoji: "🥛" },
-  { label: "美容液", slug: "serum", emoji: "✨" },
-  { label: "保湿クリーム", slug: "moisturizer", emoji: "🫙" },
-  { label: "日焼け止め", slug: "sunscreen", emoji: "☀️" },
-  { label: "シャンプー", slug: "shampoo", emoji: "💆" },
-  { label: "ボディウォッシュ", slug: "body-wash", emoji: "🚿" },
+  { label: "洗顔料", slug: "face-wash" },
+  { label: "化粧水", slug: "lotion" },
+  { label: "乳液", slug: "emulsion" },
+  { label: "美容液", slug: "serum" },
+  { label: "保湿クリーム", slug: "moisturizer" },
+  { label: "日焼け止め", slug: "sunscreen" },
+  { label: "シャンプー", slug: "shampoo" },
+  { label: "ボディウォッシュ", slug: "body-wash" },
 ];
 
 const NAV_LINKS = [
@@ -121,10 +121,7 @@ export function Header() {
                     onClick={close}
                     className="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-brand transition-colors"
                   >
-                    <span className="flex items-center gap-2.5">
-                      <span className="text-base">{cat.emoji}</span>
-                      {cat.label}
-                    </span>
+                    <span>{cat.label}</span>
                     <ChevronRight size={14} className="text-gray-300" />
                   </Link>
                 </li>
