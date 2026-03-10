@@ -6,13 +6,13 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
   title: {
-    default: "Yutori | メンズ美容品 比較・発見",
-    template: "%s | Yutori",
+    default: "IGNITERA BEAUTY | メンズ美容品 比較・発見",
+    template: "%s | IGNITERA BEAUTY",
   },
   description:
     "メンズ美容品を横断的に比較できるプラットフォーム。洗顔・化粧水・日焼け止めなど、スペックで選ぶ新しい美容体験。",
   openGraph: {
-    siteName: "Yutori",
+    siteName: "IGNITERA BEAUTY",
     type: "website",
     locale: "ja_JP",
   },

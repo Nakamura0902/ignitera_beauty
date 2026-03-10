@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div>
-            <h3 className="mb-3 text-sm font-bold text-gray-900">Yutori</h3>
+            <h3 className="mb-3 text-sm font-bold text-gray-900">IGNITERA BEAUTY</h3>
             <p className="text-xs text-gray-500 leading-relaxed">
               メンズ美容品を横断的に比較。
               <br />

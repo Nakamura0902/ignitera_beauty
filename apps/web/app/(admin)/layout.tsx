@@ -20,7 +20,7 @@ export default function AdminLayout({
       <aside className="w-56 flex-shrink-0 border-r border-gray-200 bg-gray-50">
         <div className="flex h-14 items-center border-b border-gray-200 px-4">
           <Link href="/" className="font-bold text-brand">
-            Yutori
+            IGNITERA BEAUTY
           </Link>
           <span className="ml-2 rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-600">
             Admin

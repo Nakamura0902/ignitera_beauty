@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "ブランド一覧",
-  description: "Yutoriに掲載しているメンズ美容ブランドの一覧。",
+  description: "IGNITERA BEAUTYに掲載しているメンズ美容ブランドの一覧。",
 };
 
 export const revalidate = 3600;

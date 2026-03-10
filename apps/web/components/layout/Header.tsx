@@ -26,7 +26,7 @@ export function Header() {
         <div className="flex h-14 items-center justify-between gap-4">
           {/* ロゴ */}
           <Link href="/" className="flex-shrink-0 font-bold text-brand text-xl tracking-tight">
-            Yutori
+            IGNITERA BEAUTY
           </Link>
 
           {/* ナビ (PC) */}

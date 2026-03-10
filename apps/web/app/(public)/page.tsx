@@ -123,7 +123,7 @@ export default async function TopPage() {
         <div className="mx-auto max-w-2xl px-4 text-center">
           <h2 className="text-xl font-bold text-gray-900">ブランドの方へ</h2>
           <p className="mt-3 text-sm text-gray-600">
-            Yutoriへの商品掲載は月額¥2,500/商品から。
+            IGNITERA BEAUTYへの商品掲載は月額¥2,500/商品から。
             <br />
             詳しくはお気軽にお問い合わせください。
           </p>
