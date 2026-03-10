@@ -1,0 +1,9 @@
+{
+  "name": "@yutori/database",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./types/database.ts",
+  "exports": {
+    ".": "./types/database.ts"
+  }
+}
