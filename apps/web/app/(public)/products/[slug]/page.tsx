@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { createStaticClient } from "@/lib/supabase/static";
 import {
   formatPrice,
   formatVolume,
@@ -15,8 +14,7 @@ import type { ProductWithDetails, SkinType } from "@/types/database";
 import { ProductCard } from "@/components/product/ProductCard";
 import type { ProductWithBrand } from "@/types/database";
 
-export const revalidate = 3600; // ISR: 1時間
-export const dynamicParams = true; // generateStaticParams外のスラッグも動的レンダリング
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -44,14 +42,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title, description };
 }
 
-export async function generateStaticParams() {
-  const supabase = createStaticClient();
-  if (!supabase) return [];
-  const { data } = await supabase
-    .from("products")
-    .select("slug");
-  return (data ?? []).map((p: { slug: string }) => ({ slug: p.slug }));
-}
 
 const SPEC_LABELS: { key: string; label: string }[] = [
   { key: "spf", label: "SPF" },
