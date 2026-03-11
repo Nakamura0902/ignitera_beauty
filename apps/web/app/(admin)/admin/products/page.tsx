@@ -26,6 +26,7 @@ export default async function AdminProductsPage() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left font-medium text-gray-500">商品名</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-500">スラッグ</th>
               <th className="px-4 py-3 text-left font-medium text-gray-500">ブランド</th>
               <th className="px-4 py-3 text-left font-medium text-gray-500">カテゴリ</th>
               <th className="px-4 py-3 text-right font-medium text-gray-500">価格</th>
@@ -41,6 +42,7 @@ export default async function AdminProductsPage() {
               return (
                 <tr key={product.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 font-medium text-gray-800">{product.name}</td>
+                  <td className="px-4 py-3 text-gray-400 text-xs font-mono">{product.slug}</td>
                   <td className="px-4 py-3 text-gray-600">{brand?.name ?? "—"}</td>
                   <td className="px-4 py-3 text-gray-600">{category?.name ?? "—"}</td>
                   <td className="px-4 py-3 text-right text-gray-600">
