@@ -82,10 +82,14 @@ export default async function ProductDetailPage({ params }: Props) {
       {/* パンくず */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500">
         <Link href="/" className="hover:text-brand">トップ</Link>
-        <span>/</span>
-        <Link href={`/categories/${p.categories.slug}`} className="hover:text-brand">
-          {p.categories.name}
-        </Link>
+        {p.categories && (
+          <>
+            <span>/</span>
+            <Link href={`/categories/${p.categories.slug}`} className="hover:text-brand">
+              {p.categories.name}
+            </Link>
+          </>
+        )}
         <span>/</span>
         <span className="text-gray-900 line-clamp-1">{p.name}</span>
       </nav>
@@ -113,9 +117,11 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* 右：詳細 */}
         <div>
-          <Link href={`/brands/${p.brands.slug}`} className="text-sm text-brand hover:underline">
-            {p.brands.name}
-          </Link>
+          {p.brands && (
+            <Link href={`/brands/${p.brands.slug}`} className="text-sm text-brand hover:underline">
+              {p.brands.name}
+            </Link>
+          )}
           <h1 className="mt-1 text-xl font-bold text-gray-900 sm:text-2xl">{p.name}</h1>
 
           <div className="mt-4 flex items-end gap-3">
@@ -173,7 +179,7 @@ export default async function ProductDetailPage({ params }: Props) {
               <ExternalLink size={15} />
             </a>
             <p className="text-center text-xs text-gray-400">
-              購入は{p.brands.name}の公式サイトで行われます
+              購入は{p.brands?.name ?? "ブランド"}の公式サイトで行われます
             </p>
           </div>
         </div>
@@ -196,12 +202,14 @@ export default async function ProductDetailPage({ params }: Props) {
             <h2 className="text-base font-semibold text-gray-800">
               同じカテゴリの商品
             </h2>
-            <Link
-              href={`/categories/${p.categories.slug}`}
-              className="flex items-center gap-1 text-sm text-brand hover:underline"
-            >
-              もっと見る
-            </Link>
+            {p.categories && (
+              <Link
+                href={`/categories/${p.categories.slug}`}
+                className="flex items-center gap-1 text-sm text-brand hover:underline"
+              >
+                もっと見る
+              </Link>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {(related as ProductWithBrand[]).map((rel) => (
