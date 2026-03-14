@@ -99,15 +99,33 @@ export async function createProduct(formData: FormData) {
 export async function updateProduct(formData: FormData) {
   const supabase = await createAdminClient();
   const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
 
   const skinTypes = formData.getAll("skin_types") as string[];
 
-  const specsRaw = formData.get("specs_json") as string;
-  let specs: Record<string, unknown> = {};
-  try {
-    if (specsRaw) specs = JSON.parse(specsRaw);
-  } catch {
-    // ignore
+  // スラッグ: 手動入力 or 商品名から自動生成
+  const slugInput = (formData.get("slug") as string).trim();
+  const slug = slugInput
+    ? slugInput
+    : name.toLowerCase().replace(/[^a-z0-9\u3040-\u30ff\u4e00-\u9fff]+/g, "-").replace(/^-|-$/g, "");
+
+  // 個別スペックフィールドからspecs_jsonを組み立て
+  const specs: Record<string, unknown> = {};
+  const specFields: [string, string][] = [
+    ["spec_spf", "spf"],
+    ["spec_pa", "pa"],
+    ["spec_texture", "texture"],
+    ["spec_scent", "scent"],
+    ["spec_wash_type", "wash_type"],
+  ];
+  for (const [formKey, jsonKey] of specFields) {
+    const val = (formData.get(formKey) as string).trim();
+    if (val) specs[jsonKey] = val;
+  }
+  // 主な成分はカンマ区切りで配列化
+  const ingredientsRaw = (formData.get("spec_main_ingredients") as string).trim();
+  if (ingredientsRaw) {
+    specs.main_ingredients = ingredientsRaw.split(",").map((s) => s.trim()).filter(Boolean);
   }
 
   // 画像アップロード（新しい画像が選択された場合のみ更新）
@@ -119,20 +137,25 @@ export async function updateProduct(formData: FormData) {
     if (uploaded) main_image_url = uploaded;
   }
 
+  const categoryId = (formData.get("category_id") as string) || null;
+
   const updateData: Record<string, unknown> = {
     brand_id: formData.get("brand_id") as string,
-    category_id: formData.get("category_id") as string,
-    name: formData.get("name") as string,
+    category_id: categoryId,
+    name,
+    slug,
     description: (formData.get("description") as string) || null,
     price_yen: formData.get("price_yen") ? parseInt(formData.get("price_yen") as string) : null,
-    volume_ml: formData.get("volume_ml") ? parseInt(formData.get("volume_ml") as string) : null,
+    volume_ml: formData.get("volume_ml") ? parseFloat(formData.get("volume_ml") as string) : null,
     skin_types: skinTypes,
     is_fragrance_free: formData.get("is_fragrance_free") === "on",
     is_alcohol_free: formData.get("is_alcohol_free") === "on",
     specs_json: specs,
-    external_url: formData.get("external_url") as string,
+    external_url: (formData.get("external_url") as string) || null,
     is_published: formData.get("is_published") === "on",
     is_featured: formData.get("is_featured") === "on",
+    meta_title: (formData.get("meta_title") as string) || null,
+    meta_description: (formData.get("meta_description") as string) || null,
   };
   if (main_image_url !== undefined) updateData.main_image_url = main_image_url;
 

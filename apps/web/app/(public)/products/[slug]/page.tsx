@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import {
   formatPrice,
   formatVolume,
@@ -22,7 +22,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
+  const supabase = await createAdminClient();
   const { data: product } = await supabase
     .from("products")
     .select("name, description, meta_title, meta_description, brands(name)")
@@ -54,7 +54,7 @@ const SPEC_LABELS: { key: string; label: string }[] = [
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = await createClient();
+  const supabase = await createAdminClient();
 
   const { data: product } = await supabase
     .from("products")
